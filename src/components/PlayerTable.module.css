@@ -1,0 +1,19 @@
+.container {
+  display: inline-block;
+  width: calc(100vw - 405px);
+  height: 99vh;
+  overflow: auto;
+}
+
+.tableHeader {
+  background-color: white;
+  position: sticky;
+  top: 0px;
+  left: 10px;
+  text-align: center;
+}
+
+.tableCell {
+  padding-left: 20px;
+  font-size: 0.75em;
+}

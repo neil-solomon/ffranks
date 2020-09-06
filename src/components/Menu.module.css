@@ -1,0 +1,27 @@
+.container {
+  display: inline-block;
+  width: 400px;
+  height: 99vh;
+  box-shadow: 10px 0px 10px -10px rgb(0, 0, 0, 0.5);
+  overflow: auto;
+}
+
+.menuSection {
+  padding: 20px;
+  font-size: 0.75em;
+}
+
+.menuSectionHeader {
+  text-align: center;
+  font-weight: bold;
+}
+
+.position {
+  display: inline-block;
+  margin-right: 25px;
+}
+
+.numberInput {
+  width: 50px;
+  margin-right: 5px;
+}

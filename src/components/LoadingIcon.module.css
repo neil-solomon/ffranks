@@ -1,0 +1,153 @@
+.loadingIcon {
+  display: inline-block;
+  margin-left: 10px;
+  width: 100px;
+}
+
+.loadingIcon1 {
+  display: inline-block;
+  border-radius: 100%;
+  margin-right: 5px;
+  background-color: #536dfe;
+  animation: loadingIcon1 2s infinite;
+}
+@keyframes loadingIcon1 {
+  0% {
+    opacity: 0;
+    width: 0px;
+    height: 0px;
+  }
+  20% {
+    opacity: 1;
+    width: 8px;
+    height: 8px;
+  }
+  80% {
+    opacity: 1;
+    width: 8px;
+    height: 8px;
+  }
+  100% {
+    opacity: 0;
+    width: 0px;
+    height: 0px;
+  }
+}
+
+.loadingIcon2 {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 100%;
+  margin-right: 5px;
+  background-color: #536dfe;
+  animation: loadingIcon2 2s infinite;
+}
+@keyframes loadingIcon2 {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 0;
+    width: 0px;
+    height: 0px;
+  }
+  30% {
+    opacity: 1;
+    width: 8px;
+    height: 8px;
+  }
+  70% {
+    opacity: 1;
+    width: 8px;
+    height: 8px;
+  }
+  90% {
+    opacity: 0;
+    width: 0px;
+    height: 0px;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.loadingIcon3 {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 100%;
+  margin-right: 5px;
+  background-color: #536dfe;
+  animation: loadingIcon3 2s infinite;
+}
+@keyframes loadingIcon3 {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0;
+    width: 0px;
+    height: 0px;
+  }
+  40% {
+    opacity: 1;
+    width: 8px;
+    height: 8px;
+  }
+  60% {
+    opacity: 1;
+    width: 8px;
+    height: 8px;
+  }
+  80% {
+    opacity: 0;
+    width: 0px;
+    height: 0px;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.loadingIcon4 {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 100%;
+  margin-right: 5px;
+  background-color: #536dfe;
+  animation: loadingIcon4 2s infinite;
+}
+@keyframes loadingIcon4 {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 0;
+    width: 0px;
+    height: 0px;
+  }
+  50% {
+    opacity: 1;
+    width: 8px;
+    height: 8px;
+  }
+  70% {
+    opacity: 0;
+    width: 0px;
+    height: 0px;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

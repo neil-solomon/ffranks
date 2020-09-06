@@ -1,0 +1,19 @@
+.loading {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 1em;
+  animation: fadeIn 0.5s forwards;
+}
+
+.container {
+  animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
