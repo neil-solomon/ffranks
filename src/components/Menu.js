@@ -15,25 +15,48 @@ export default class Menu extends React.Component {
           {this.positions
             .filter((position) => position !== "FLEX")
             .map((position) => (
-              <div className={style.position}>
-                <input type="checkbox" name={position + "checkbox"} />
-                <label for={position + "checkbox"}>{position}</label>
+              <div key={"view" + position} className={style.position}>
+                <input
+                  type="checkbox"
+                  name={position + "checkbox"}
+                  checked={this.props.positionsInView[position]}
+                  onChange={() => this.props.change_positionsInView(position)}
+                />
+                <label
+                  htmlFor={position + "checkbox"}
+                  onClick={() => this.props.change_positionsInView(position)}
+                  className={style[position]}
+                >
+                  {position}
+                </label>
               </div>
             ))}
         </div>
         <div className={style.menuSection}>
-          <div className={style.menuSectionHeader}>Players At Position</div>
+          <div className={style.menuSectionHeader}>
+            Number Of Teams In League
+            <br />
+            <input
+              type="number"
+              name="numTeams"
+              id="numTeams"
+              className={style.numberInput}
+              onChange={this.props.scoringChange}
+            />
+          </div>
+        </div>
+        <div className={style.menuSection}>
+          <div className={style.menuSectionHeader}>Number Of Players</div>
           {this.positions.map((position) => (
-            <div className={style.position}>
+            <div key={"numPlayers" + position} className={style.position}>
               <input
                 type="number"
                 name={position + "number"}
-                placeholder={0}
+                id={"numPlayers_" + position}
                 className={style.numberInput}
+                onChange={this.props.scoringChange}
               />
-              <label for={position + "number"} class>
-                {position}
-              </label>
+              <label htmlFor={position + "number"}>{position}</label>
             </div>
           ))}
         </div>
@@ -44,10 +67,11 @@ export default class Menu extends React.Component {
               <input
                 type="number"
                 name={stat}
-                placeholder={0}
                 className={style.numberInput}
+                id={"statPoints_" + stat}
+                onChange={this.props.scoringChange}
               />
-              <label for={stat}>{stat}</label>
+              <label htmlFor={stat}>{stat}</label>
             </div>
           ))}
         </div>

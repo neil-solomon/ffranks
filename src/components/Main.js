@@ -9,8 +9,18 @@ export default class Main extends React.Component {
   constructor(props) {
     super(props);
     this.cleanData_timeout = null;
+    this.calculatePointsAndPOR_timeout = null;
+    this.initializeScoringValues_timeout = null;
     this.cancelAxios = false;
     this.state = {
+      positionsInView: {
+        QB: true,
+        RB: true,
+        WR: true,
+        TE: true,
+        DST: true,
+        K: true,
+      },
       players: [],
       allStats: [],
       is_get_qb_done: false,
@@ -42,6 +52,8 @@ export default class Main extends React.Component {
   componentWillUnmount = () => {
     this.cancelAxios = true;
     clearTimeout(this.cleanData_timeout);
+    clearTimeout(this.calculatePointsAndPOR_timeout);
+    clearTimeout(this.initializeScoringValues_timeout);
   };
 
   get_qb = () => {
@@ -88,6 +100,9 @@ export default class Main extends React.Component {
           players.push({
             name: name.innerText.replace(/\n/g, "").replace(/ +/g, " ").trim(),
             position: "QB",
+            points: 0,
+            por: 0,
+            drafted: false,
           });
         }
 
@@ -113,7 +128,7 @@ export default class Main extends React.Component {
           is_get_qb_done: true,
         });
 
-        this.cleanData_timeout = setTimeout(() => this.cleanData(), 100);
+        this.cleanData_timeout = setTimeout(() => this.cleanData(), 250);
       })
       .catch((error) => {
         console.log("get_qb", error);
@@ -165,6 +180,9 @@ export default class Main extends React.Component {
           players.push({
             name: name.innerText.replace(/\n/g, "").replace(/ +/g, " ").trim(),
             position: "RB",
+            points: 0,
+            por: 0,
+            drafted: false,
           });
         }
 
@@ -189,7 +207,7 @@ export default class Main extends React.Component {
           is_get_rb_done: true,
         });
 
-        this.cleanData_timeout = setTimeout(() => this.cleanData(), 100);
+        this.cleanData_timeout = setTimeout(() => this.cleanData(), 250);
       })
       .catch((error) => {
         console.log("get_rb", error);
@@ -241,6 +259,9 @@ export default class Main extends React.Component {
           players.push({
             name: name.innerText.replace(/\n/g, "").replace(/ +/g, " ").trim(),
             position: "WR",
+            points: 0,
+            por: 0,
+            drafted: false,
           });
         }
 
@@ -265,7 +286,7 @@ export default class Main extends React.Component {
           is_get_wr_done: true,
         });
 
-        this.cleanData_timeout = setTimeout(() => this.cleanData(), 100);
+        this.cleanData_timeout = setTimeout(() => this.cleanData(), 250);
       })
       .catch((error) => {
         console.log("get_wr", error);
@@ -317,6 +338,9 @@ export default class Main extends React.Component {
           players.push({
             name: name.innerText.replace(/\n/g, "").replace(/ +/g, " ").trim(),
             position: "TE",
+            points: 0,
+            por: 0,
+            drafted: false,
           });
         }
 
@@ -341,7 +365,7 @@ export default class Main extends React.Component {
           is_get_te_done: true,
         });
 
-        this.cleanData_timeout = setTimeout(() => this.cleanData(), 100);
+        this.cleanData_timeout = setTimeout(() => this.cleanData(), 250);
       })
       .catch((error) => {
         console.log("get_te", error);
@@ -394,6 +418,9 @@ export default class Main extends React.Component {
               .replace(/ +/g, " ")
               .trim(),
             position: "DST",
+            points: 0,
+            por: 0,
+            drafted: false,
           });
         }
         // console.log(table);
@@ -418,7 +445,7 @@ export default class Main extends React.Component {
           is_get_dst_done: true,
         });
 
-        this.cleanData_timeout = setTimeout(() => this.cleanData(), 100);
+        this.cleanData_timeout = setTimeout(() => this.cleanData(), 250);
       })
       .catch((error) => {
         console.log("get_dst", error);
@@ -470,6 +497,9 @@ export default class Main extends React.Component {
           players.push({
             name: name.innerText.replace(/\n/g, "").replace(/ +/g, " ").trim(),
             position: "K",
+            points: 0,
+            por: 0,
+            drafted: false,
           });
         }
 
@@ -489,12 +519,60 @@ export default class Main extends React.Component {
           }
         }
 
+        for (var player of players) {
+          delete player["Field Goals Made"];
+
+          player["Made Extra Points"] = player["Extra Points Made"];
+          player["Missed Extra Points"] =
+            player["Extra Points Attempted"] - player["Extra Points Made"];
+          delete player["Extra Points Attempted"];
+          delete player["Extra Points Made"];
+
+          player["Made Field Goals 1-19 Yd"] = player["Field Goals 1-19 Yards"];
+          player["Missed Field Goals 1-19 Yd"] =
+            player["Field Goals 1-19 Yard Attempts"] -
+            player["Field Goals 1-19 Yards"];
+          delete player["Field Goals 1-19 Yard Attempts"];
+          delete player["Field Goals 1-19 Yards"];
+
+          player["Made Field Goals 20-29 Yd"] =
+            player["Field Goals 20-29 Yards"];
+          player["Missed Field Goals 20-29 Yd"] =
+            player["Field Goals 20-29 Yard Attempts"] -
+            player["Field Goals 20-29 Yards"];
+          delete player["Field Goals 20-29 Yard Attempts"];
+          delete player["Field Goals 20-29 Yards"];
+
+          player["Made Field Goals 30-39 Yd"] =
+            player["Field Goals 30-39 Yards"];
+          player["Missed Field Goals 30-39 Yd"] =
+            player["Field Goals 30-39 Yard Attempts"] -
+            player["Field Goals 30-39 Yards"];
+          delete player["Field Goals 30-39 Yard Attempts"];
+          delete player["Field Goals 30-39 Yards"];
+
+          player["Made Field Goals 40-49 Yd"] =
+            player["Field Goals 40-49 Yards"];
+          player["Missed Field Goals 40-49 Yd"] =
+            player["Field Goals 40-49 Yard Attempts"] -
+            player["Field Goals 40-49 Yards"];
+          delete player["Field Goals 40-49 Yard Attempts"];
+          delete player["Field Goals 40-49 Yards"];
+
+          player["Made Field Goals 50+ Yd"] = player["Field Goals 50+ Yards"];
+          player["Missed Field Goals 50+ Yd"] =
+            player["Field Goals 50+ Yards Attempts"] -
+            player["Field Goals 50+ Yards"];
+          delete player["Field Goals 50+ Yards Attempts"];
+          delete player["Field Goals 50+ Yards"];
+        }
+
         this.setState({
           players: [...this.state.players, ...players],
           is_get_k_done: true,
         });
 
-        this.cleanData_timeout = setTimeout(() => this.cleanData(), 100);
+        this.cleanData_timeout = setTimeout(() => this.cleanData(), 250);
       })
       .catch((error) => {
         console.log("get_k", error);
@@ -543,7 +621,14 @@ export default class Main extends React.Component {
         }
       }
       for (var stat of Object.keys(player)) {
-        if (stat !== "name" && stat != "position" && !allStats.includes(stat)) {
+        if (
+          stat !== "name" &&
+          stat != "position" &&
+          stat != "points" &&
+          stat != "por" &&
+          stat != "drafted" &&
+          !allStats.includes(stat)
+        ) {
           allStats.push(stat);
         }
       }
@@ -555,7 +640,128 @@ export default class Main extends React.Component {
       players: newPlayers,
       allStats,
     });
+    this.initializeScoringValues_timeout = setTimeout(
+      () => this.initializeScoringValues(),
+      250
+    );
+    this.calculatePointsAndPOR_timeout = setTimeout(
+      () => this.calculatePointsAndPOR(),
+      500
+    );
     // this.make_dummyData(newPlayers);
+  };
+
+  initializeScoringValues = () => {
+    var menuData = JSON.parse(localStorage.getItem("menuData"));
+    if (menuData) {
+      for (const key of Object.keys(menuData)) {
+        var element = document.getElementById(key);
+        if (element) {
+          element.value = menuData[key];
+        }
+      }
+    }
+  };
+
+  scoringChange = () => {
+    const positions = ["QB", "RB", "WR", "TE", "DST", "K", "FLEX"];
+    var storageData = {};
+
+    for (const position of positions) {
+      var value = parseFloat(
+        document.getElementById("numPlayers_" + position).value
+      );
+      storageData["numPlayers_" + position] = isNaN(value) ? 0 : value;
+    }
+
+    for (const stat of this.state.allStats) {
+      var value = parseFloat(
+        document.getElementById("statPoints_" + stat).value
+      );
+      storageData["statPoints_" + stat] = isNaN(value) ? 0 : value;
+    }
+
+    var value = parseFloat(document.getElementById("numTeams").value);
+    storageData["numTeams"] = isNaN(value) ? 0 : value;
+
+    localStorage.setItem("menuData", JSON.stringify(storageData));
+    this.calculatePointsAndPOR();
+  };
+
+  calculatePointsAndPOR = () => {
+    var players = JSON.parse(JSON.stringify(this.state.players));
+
+    for (var player of players) {
+      player["points"] = 0;
+      for (const stat of this.state.allStats) {
+        if (Object.keys(player).includes(stat)) {
+          var value = parseFloat(
+            document.getElementById("statPoints_" + stat).value
+          );
+          player.points += isNaN(value) ? 0 : value * player[stat];
+        }
+      }
+    }
+
+    players.sort((a, b) => (a.points > b.points ? -1 : 1));
+
+    var benchPlayer = {
+      QB:
+        parseInt(document.getElementById("numTeams").value) *
+          parseInt(document.getElementById("numPlayers_QB").value) +
+        1,
+      RB:
+        parseInt(document.getElementById("numTeams").value) *
+          parseInt(document.getElementById("numPlayers_RB").value) +
+        1,
+      WR:
+        parseInt(document.getElementById("numTeams").value) *
+          parseInt(document.getElementById("numPlayers_WR").value) +
+        1,
+      TE:
+        parseInt(document.getElementById("numTeams").value) *
+          parseInt(document.getElementById("numPlayers_TE").value) +
+        1,
+      DST:
+        parseInt(document.getElementById("numTeams").value) *
+          parseInt(document.getElementById("numPlayers_DST").value) +
+        1,
+      K:
+        parseInt(document.getElementById("numTeams").value) *
+          parseInt(document.getElementById("numPlayers_K").value) +
+        1,
+    };
+    var benchPoints = { QB: 0, RB: 0, WR: 0, TE: 0, DST: 0, K: 0 };
+    var benchCount = { QB: 0, RB: 0, WR: 0, TE: 0, DST: 0, K: 0 };
+
+    for (var player of players) {
+      benchCount[player.position] += 1;
+      if (benchCount[player.position] === benchPlayer[player.position]) {
+        benchPoints[player.position] = player.points;
+      }
+    }
+
+    for (var player of players) {
+      player.por = player.points - benchPoints[player.position];
+    }
+
+    players.sort((a, b) => (a.por > b.por ? -1 : 1));
+
+    this.setState({ players });
+  };
+
+  change_positionsInView = (position) => {
+    var positionsInView = JSON.parse(
+      JSON.stringify(this.state.positionsInView)
+    );
+    positionsInView[position] = !this.state.positionsInView[position];
+    this.setState({ positionsInView });
+  };
+
+  toggleDrafted = (index) => {
+    var players = JSON.parse(JSON.stringify(this.state.players));
+    players[index].drafted = !this.state.players[index].drafted;
+    this.setState({ players });
   };
 
   make_dummyData = (newPlayers) => {
@@ -577,7 +783,6 @@ export default class Main extends React.Component {
   };
 
   render() {
-    console.log(this.state.players);
     if (!this.state.is_getDone) {
       return (
         <div className={style.loading} key="loading">
@@ -594,8 +799,17 @@ export default class Main extends React.Component {
     }
     return (
       <div className={style.container} key="main">
-        <Menu stats={this.state.allStats} />
-        <PlayerTable players={this.state.players} />
+        <Menu
+          stats={this.state.allStats}
+          scoringChange={this.scoringChange}
+          positionsInView={this.state.positionsInView}
+          change_positionsInView={this.change_positionsInView}
+        />
+        <PlayerTable
+          players={this.state.players}
+          positionsInView={this.state.positionsInView}
+          toggleDrafted={this.toggleDrafted}
+        />
       </div>
     );
   }

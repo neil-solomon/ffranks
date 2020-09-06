@@ -2,7 +2,7 @@
   display: inline-block;
   width: 400px;
   height: 99vh;
-  box-shadow: 10px 0px 10px -10px rgb(0, 0, 0, 0.5);
+  /* box-shadow: 10px 0px 10px -10px rgb(0, 0, 0, 0.5); */
   overflow: auto;
 }
 
@@ -24,4 +24,40 @@
 .numberInput {
   width: 50px;
   margin-right: 5px;
+}
+
+.QB {
+  background-color: rgb(255, 0, 0, 0.4);
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.RB {
+  background-color: rgb(0, 255, 0, 0.4);
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.WR {
+  background-color: rgb(0, 0, 255, 0.4);
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.TE {
+  background-color: rgb(255, 255, 0, 0.4);
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.DST {
+  background-color: rgb(255, 0, 255, 0.4);
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.K {
+  background-color: rgb(0, 255, 255, 0.4);
+  padding-left: 5px;
+  padding-right: 5px;
 }
