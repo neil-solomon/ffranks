@@ -7,10 +7,7 @@
 
 .tableHeader {
   background-color: white;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding: 5px;
   position: sticky;
   min-width: 100px;
   top: 0px;
@@ -19,8 +16,9 @@
 }
 
 .tableCell {
-  padding-left: 20px;
+  text-align: center;
   font-size: 0.75em;
+  padding: 5px;
 }
 
 .QB {
@@ -70,9 +68,11 @@
 .draftButton {
   width: 100px;
   background-color: rgb(235, 235, 235);
-  transition: background-color 0.25s;
+  font-weight: normal;
+  transition: background-color 0.25s, font-weight 0.25s;
 }
 
 .draftButton:hover {
   background-color: rgb(200, 200, 200);
+  font-weight: bold;
 }

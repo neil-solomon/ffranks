@@ -2,12 +2,47 @@ import React from "react";
 import style from "./PlayerTable.module.css";
 
 export default class PlayerTable extends React.Component {
+  getNumTeams = () => {
+    let numTeams = -1;
+    const element = document.getElementById("numTeams");
+    if (element) {
+      numTeams = parseInt(element.value);
+      numTeams = isNaN(numTeams) ? 0 : numTeams;
+    }
+    return numTeams;
+  };
+
+  getNumInPosition = (players) => {
+    const numInPosition = {
+      QB: 0,
+      RB: 0,
+      WR: 0,
+      TE: 0,
+      K: 0,
+      DST: 0,
+    };
+
+    for (const player of players) {
+      numInPosition[player.position] += 1;
+    }
+
+    return numInPosition;
+  };
+
   render() {
+    const numTeams = this.getNumTeams();
+    if (numTeams === 0) {
+      return null;
+    }
+
+    // const numInPosition = this.getNumInPosition(this.props.players);
+
     return (
       <div className={style.container}>
         <table>
           <thead>
             <tr>
+              <th className={style.tableHeader}>Round / Rank</th>
               <th className={style.tableHeader}>Name</th>
               <th className={style.tableHeader}>Position</th>
               <th className={style.tableHeader}>Points</th>
@@ -30,6 +65,9 @@ export default class PlayerTable extends React.Component {
                           style[player.position]
                     }
                   >
+                    <td className={style.tableCell}>
+                      {parseInt(ix / numTeams) + 1 + " / " + (ix + 1)}
+                    </td>
                     <td className={style.tableCell}>{player.name}</td>
                     <td className={style.tableCell}>{player.position}</td>
                     <td className={style.tableCell}>

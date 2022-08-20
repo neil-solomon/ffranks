@@ -7,10 +7,23 @@ export default class Menu extends React.Component {
     this.positions = ["QB", "RB", "WR", "TE", "DST", "K", "FLEX"];
   }
 
+  hoursSinceLastUpdate = () => {
+    const lastUpdateMs = parseInt(localStorage.getItem("responseTimeEpochMs"));
+    const deltaMs = Date.now() - lastUpdateMs;
+    const deltaHr = deltaMs / 60 / 60 / 1000;
+    return deltaHr.toPrecision(1);
+  };
+
   render() {
     return (
       <div className={style.container}>
         <div className={style.menuSection}>
+          <div>
+            <button onClick={() => this.props.refreshData(true)}>
+              Refresh Data
+            </button>{" "}
+            Data is {this.hoursSinceLastUpdate()} hours old.
+          </div>
           <div className={style.menuSectionHeader}>Positions In View</div>
           {this.positions
             .filter((position) => position !== "FLEX")
@@ -62,7 +75,7 @@ export default class Menu extends React.Component {
         </div>
         <div className={style.menuSection}>
           <div className={style.menuSectionHeader}>Scoring</div>
-          {this.props.stats.map((stat) => (
+          {this.props.stats.sort().map((stat) => (
             <div key={stat}>
               <input
                 type="number"
