@@ -556,6 +556,9 @@ export default class Main extends React.Component {
           stat !== "points" &&
           stat !== "por" &&
           stat !== "drafted" &&
+          stat !== "overallRank" &&
+          stat !== "pon" &&
+          stat !== "positionRank" &&
           !allStats.includes(stat)
         ) {
           allStats.push(stat);
@@ -737,6 +740,10 @@ export default class Main extends React.Component {
     let players = JSON.parse(JSON.stringify(this.state.players));
     players[index].drafted = !this.state.players[index].drafted;
     this.setState({ players });
+    this.calculatePoints_timeout = setTimeout(
+      () => this.calculatePoints(),
+      250
+    );
   };
 
   make_dummyData = (newPlayers) => {
