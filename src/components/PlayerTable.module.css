@@ -1,6 +1,6 @@
 .container {
   display: inline-block;
-  width: calc(100vw - 405px);
+  width: calc(100vw - 305px);
   height: 99vh;
   overflow: auto;
 }
@@ -13,6 +13,14 @@
   top: 0px;
   left: 0px;
   text-align: center;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.pointsOverNextNumPicks {
+  width: 35px;
 }
 
 .tableCell {

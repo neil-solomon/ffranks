@@ -11,7 +11,11 @@ export default class Menu extends React.Component {
     const lastUpdateMs = parseInt(localStorage.getItem("responseTimeEpochMs"));
     const deltaMs = Date.now() - lastUpdateMs;
     const deltaHr = deltaMs / 60 / 60 / 1000;
-    return deltaHr.toPrecision(1);
+    const deltaHrStr = deltaHr.toString();
+    const decimalIx = deltaHrStr.indexOf(".");
+    const hoursSinceLastUpdate =
+      decimalIx >= 0 ? deltaHrStr.slice(0, decimalIx + 2) : deltaHrStr;
+    return hoursSinceLastUpdate;
   };
 
   render() {

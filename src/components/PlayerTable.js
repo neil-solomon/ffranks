@@ -42,11 +42,27 @@ export default class PlayerTable extends React.Component {
         <table>
           <thead>
             <tr>
-              <th className={style.tableHeader}>Round / Rank</th>
+              <th className={style.tableHeader}>Rank</th>
               <th className={style.tableHeader}>Name</th>
               <th className={style.tableHeader}>Position</th>
               <th className={style.tableHeader}>Points</th>
-              <th className={style.tableHeader}>POR</th>
+              <th
+                className={style.tableHeader + " " + style.clickable}
+                onClick={() => this.props.headerClicked("POR")}
+              >
+                POR
+              </th>
+              <th className={style.tableHeader + " " + style.clickable}>
+                <span onClick={() => this.props.headerClicked("PON")}>
+                  PON{" "}
+                </span>
+                <input
+                  className={style.pointsOverNextNumPicks}
+                  type="number"
+                  value={this.props.pointsOverNextNumPicks}
+                  onChange={this.props.pointsOverNextNumPicksChange}
+                ></input>
+              </th>
               <th className={style.tableHeader}>Draft</th>
             </tr>
           </thead>
@@ -66,7 +82,15 @@ export default class PlayerTable extends React.Component {
                     }
                   >
                     <td className={style.tableCell}>
-                      {parseInt(ix / numTeams) + 1 + " / " + (ix + 1)}
+                      {player.position +
+                        " " +
+                        player.positionRank +
+                        "  -  " +
+                        " Ovr " +
+                        player.overallRank +
+                        "  -  " +
+                        "Rd " +
+                        (parseInt(player.overallRank / numTeams) + 1)}
                     </td>
                     <td className={style.tableCell}>{player.name}</td>
                     <td className={style.tableCell}>{player.position}</td>
@@ -74,6 +98,7 @@ export default class PlayerTable extends React.Component {
                       {player.points.toFixed(1)}
                     </td>
                     <td className={style.tableCell}>{player.por.toFixed(1)}</td>
+                    <td className={style.tableCell}>{player.pon.toFixed(1)}</td>
                     <td className={style.tableCell}>
                       <button
                         onClick={() => this.props.toggleDrafted(ix)}

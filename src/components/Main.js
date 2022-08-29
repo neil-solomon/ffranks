@@ -9,7 +9,7 @@ export default class Main extends React.Component {
   constructor(props) {
     super(props);
     this.cleanData_timeout = null;
-    this.calculatePointsAndPOR_timeout = null;
+    this.calculatePoints_timeout = null;
     this.initializeScoringValues_timeout = null;
     this.getData_timeout = null;
     this.cancelAxios = false;
@@ -33,6 +33,8 @@ export default class Main extends React.Component {
       is_getError: false,
       is_getDone: false,
       is_dataClean: false,
+      playersSort: "POR",
+      pointsOverNextNumPicks: 10,
     };
   }
 
@@ -48,7 +50,7 @@ export default class Main extends React.Component {
   componentWillUnmount = () => {
     this.cancelAxios = true;
     clearTimeout(this.cleanData_timeout);
-    clearTimeout(this.calculatePointsAndPOR_timeout);
+    clearTimeout(this.calculatePoints_timeout);
     clearTimeout(this.initializeScoringValues_timeout);
     clearTimeout(this.getData_timeout);
   };
@@ -148,6 +150,9 @@ export default class Main extends React.Component {
         points: 0,
         por: 0,
         drafted: false,
+        positionRank: 0,
+        pon: 0,
+        overallRank: 0,
       });
     }
 
@@ -203,6 +208,9 @@ export default class Main extends React.Component {
         points: 0,
         por: 0,
         drafted: false,
+        positionRank: 0,
+        pon: 0,
+        overallRank: 0,
       });
     }
 
@@ -257,6 +265,9 @@ export default class Main extends React.Component {
         points: 0,
         por: 0,
         drafted: false,
+        positionRank: 0,
+        pon: 0,
+        overallRank: 0,
       });
     }
 
@@ -311,6 +322,9 @@ export default class Main extends React.Component {
         points: 0,
         por: 0,
         drafted: false,
+        positionRank: 0,
+        pon: 0,
+        overallRank: 0,
       });
     }
 
@@ -368,6 +382,9 @@ export default class Main extends React.Component {
         points: 0,
         por: 0,
         drafted: false,
+        positionRank: 0,
+        pon: 0,
+        overallRank: 0,
       });
     }
     // console.log(table);
@@ -422,6 +439,9 @@ export default class Main extends React.Component {
         points: 0,
         por: 0,
         drafted: false,
+        positionRank: 0,
+        pon: 0,
+        overallRank: 0,
       });
     }
 
@@ -553,8 +573,8 @@ export default class Main extends React.Component {
       () => this.initializeScoringValues(),
       250
     );
-    this.calculatePointsAndPOR_timeout = setTimeout(
-      () => this.calculatePointsAndPOR(),
+    this.calculatePoints_timeout = setTimeout(
+      () => this.calculatePoints(),
       500
     );
     // this.make_dummyData(newPlayers);
@@ -593,10 +613,10 @@ export default class Main extends React.Component {
     storageData["numTeams"] = isNaN(value) ? 0 : value;
 
     localStorage.setItem("menuData", JSON.stringify(storageData));
-    this.calculatePointsAndPOR();
+    this.calculatePoints();
   };
 
-  calculatePointsAndPOR = () => {
+  calculatePoints = (pointsOverNextNumPicks = null) => {
     let players = JSON.parse(JSON.stringify(this.state.players));
 
     for (const player of players) {
@@ -611,7 +631,30 @@ export default class Main extends React.Component {
       }
     }
 
-    players.sort((a, b) => (a.points > b.points ? -1 : 1));
+    this.calculateDerivedStats(
+      players,
+      pointsOverNextNumPicks
+        ? pointsOverNextNumPicks
+        : this.state.pointsOverNextNumPicks
+    );
+    this.sortPlayers(players);
+
+    this.setState({ players });
+  };
+
+  sortPlayers = (players, sortKey = null) => {
+    const sort = sortKey ? sortKey : this.state.playersSort;
+    if (sort === "POR") {
+      players.sort((a, b) => (a.por > b.por ? -1 : 1));
+    } else if (sort === "PON") {
+      players.sort((a, b) => (a.pon > b.pon ? -1 : 1));
+    }
+  };
+
+  calculateDerivedStats = (players, pointsOverNextNumPicks) => {
+    let playersSorted = JSON.parse(JSON.stringify(players)).sort((a, b) =>
+      a.points > b.points ? -1 : 1
+    );
 
     let benchPlayer = {
       QB:
@@ -641,21 +684,45 @@ export default class Main extends React.Component {
     };
     let benchPoints = { QB: 0, RB: 0, WR: 0, TE: 0, DST: 0, K: 0 };
     let benchCount = { QB: 0, RB: 0, WR: 0, TE: 0, DST: 0, K: 0 };
+    let playerNameToPositionRank = {};
+    let playerNameToPon = {};
+    let playerNameToOvrRank = {};
 
-    for (const player of players) {
+    for (let i = 0; i < playersSorted.length; ++i) {
+      const player = playersSorted[i];
       benchCount[player.position] += 1;
+      playerNameToPositionRank[player.name] = benchCount[player.position];
       if (benchCount[player.position] === benchPlayer[player.position]) {
         benchPoints[player.position] = player.points;
+      }
+      for (let j = i + pointsOverNextNumPicks; j < playersSorted.length; ++j) {
+        const player2 = playersSorted[j];
+        if (!player2.drafted && player2.position === player.position) {
+          playerNameToPon[player.name] = player.points - player2.points;
+          break;
+        }
       }
     }
 
     for (const player of players) {
       player.por = player.points - benchPoints[player.position];
+      player.positionRank = playerNameToPositionRank[player.name];
+      player.pon = playerNameToPon[player.name]
+        ? playerNameToPon[player.name]
+        : 0;
+      player.overallRank = playerNameToOvrRank[player.name];
     }
 
-    players.sort((a, b) => (a.por > b.por ? -1 : 1));
+    playersSorted = JSON.parse(JSON.stringify(players)).sort((a, b) =>
+      a.por > b.por ? -1 : 1
+    );
+    for (let i = 0; i < playersSorted.length; ++i) {
+      playerNameToOvrRank[playersSorted[i].name] = i + 1;
+    }
 
-    this.setState({ players });
+    for (const player of players) {
+      player.overallRank = playerNameToOvrRank[player.name];
+    }
   };
 
   change_positionsInView = (position) => {
@@ -690,6 +757,21 @@ export default class Main extends React.Component {
     }
   };
 
+  playerTableHeaderClicked = (headerValue) => {
+    let players = JSON.parse(JSON.stringify(this.state.players));
+    this.sortPlayers(players, headerValue);
+    this.setState({ players: players, playersSort: headerValue });
+  };
+
+  pointsOverNextNumPicksChange = (event) => {
+    const pointsOverNextNumPicks = parseInt(event.target.value);
+    if (isNaN(pointsOverNextNumPicks)) {
+      return;
+    }
+    this.calculatePoints(pointsOverNextNumPicks);
+    this.setState({ pointsOverNextNumPicks: pointsOverNextNumPicks });
+  };
+
   render() {
     if (!this.state.is_getDone) {
       return (
@@ -718,6 +800,9 @@ export default class Main extends React.Component {
           players={this.state.players}
           positionsInView={this.state.positionsInView}
           toggleDrafted={this.toggleDrafted}
+          headerClicked={this.playerTableHeaderClicked}
+          pointsOverNextNumPicks={this.state.pointsOverNextNumPicks}
+          pointsOverNextNumPicksChange={this.pointsOverNextNumPicksChange}
         />
       </div>
     );
