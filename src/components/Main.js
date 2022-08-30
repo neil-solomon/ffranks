@@ -642,7 +642,7 @@ export default class Main extends React.Component {
     );
     this.sortPlayers(players);
 
-    this.setState({ players });
+    this.setState({ players: players.slice(0, 200) });
   };
 
   sortPlayers = (players, sortKey = null) => {
@@ -698,21 +698,11 @@ export default class Main extends React.Component {
       if (benchCount[player.position] === benchPlayer[player.position]) {
         benchPoints[player.position] = player.points;
       }
-      for (let j = i + pointsOverNextNumPicks; j < playersSorted.length; ++j) {
-        const player2 = playersSorted[j];
-        if (!player2.drafted && player2.position === player.position) {
-          playerNameToPon[player.name] = player.points - player2.points;
-          break;
-        }
-      }
     }
 
     for (const player of players) {
       player.por = player.points - benchPoints[player.position];
       player.positionRank = playerNameToPositionRank[player.name];
-      player.pon = playerNameToPon[player.name]
-        ? playerNameToPon[player.name]
-        : 0;
       player.overallRank = playerNameToOvrRank[player.name];
     }
 
@@ -720,11 +710,22 @@ export default class Main extends React.Component {
       a.por > b.por ? -1 : 1
     );
     for (let i = 0; i < playersSorted.length; ++i) {
-      playerNameToOvrRank[playersSorted[i].name] = i + 1;
+      const player = playersSorted[i];
+      playerNameToOvrRank[player.name] = i + 1;
+      for (let j = i + pointsOverNextNumPicks; j < playersSorted.length; ++j) {
+        const player2 = playersSorted[j];
+        if (player2.drafted === false && player2.position === player.position) {
+          playerNameToPon[player.name] = player.points - player2.points;
+          break;
+        }
+      }
     }
 
     for (const player of players) {
       player.overallRank = playerNameToOvrRank[player.name];
+      player.pon = playerNameToPon[player.name]
+        ? playerNameToPon[player.name]
+        : 0;
     }
   };
 
