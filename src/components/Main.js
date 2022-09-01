@@ -35,6 +35,7 @@ export default class Main extends React.Component {
       is_dataClean: false,
       playersSort: "POR",
       pointsOverNextNumPicks: 10,
+      menuOpen: false,
     };
   }
 
@@ -780,29 +781,51 @@ export default class Main extends React.Component {
     this.setState({ pointsOverNextNumPicks: pointsOverNextNumPicks });
   };
 
+  toggleMenu = () => {
+    this.setState({ menuOpen: !this.state.menuOpen });
+  };
+
+  menuButton = () => {
+    return (
+      <div className={style.menuButton} key="menuButton">
+        <buttton onClick={this.toggleMenu} type="button">
+          {this.state.menuOpen ? "Close" : "Menu"}
+        </buttton>
+      </div>
+    );
+  };
+
   render() {
     if (!this.state.is_getDone) {
       return (
-        <div className={style.loading} key="loading">
-          Loading Player Data<LoadingIcon></LoadingIcon>
+        <div className={style.container} key="main">
+          {this.menuButton()}
+          <div className={style.loading} key="loading">
+            Loading Player Data<LoadingIcon></LoadingIcon>
+          </div>
         </div>
       );
     }
     if (this.is_getError) {
       return (
-        <div className={style.loading} key="error">
-          Error Loading Player Data
+        <div className={style.container} key="main">
+          {this.menuButton()}
+          <div className={style.loading} key="error">
+            Error Loading Player Data
+          </div>
         </div>
       );
     }
     return (
       <div className={style.container} key="main">
+        {this.menuButton()}
         <Menu
           stats={this.state.allStats}
           scoringChange={this.scoringChange}
           positionsInView={this.state.positionsInView}
           change_positionsInView={this.change_positionsInView}
           refreshData={this.refresh_data}
+          menuOpen={this.state.menuOpen}
         />
         <PlayerTable
           players={this.state.players}

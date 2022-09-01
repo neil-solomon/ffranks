@@ -20,7 +20,13 @@ export default class Menu extends React.Component {
 
   render() {
     return (
-      <div className={style.container}>
+      <div
+        className={
+          style.container +
+          " " +
+          (this.props.menuOpen ? style.containerOpen : style.containerClosed)
+        }
+      >
         <div className={style.menuSection}>
           <div>
             <button onClick={() => this.props.refreshData(true)}>

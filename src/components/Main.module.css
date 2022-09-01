@@ -17,3 +17,13 @@
     opacity: 1;
   }
 }
+
+.menuButton {
+  position: absolute;
+  z-index: 3;
+  cursor: pointer;
+  width: 75px;
+  text-align: center;
+  height: 25px;
+  background-color: rgb(225, 225, 225);
+}

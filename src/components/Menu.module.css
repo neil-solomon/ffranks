@@ -1,9 +1,23 @@
 .container {
-  display: inline-block;
+  background-color: white;
+  padding-top: 25px;
+  padding-bottom: 50px;
+  position: absolute;
+  z-index: 2;
   width: 300px;
-  height: 99vh;
+  max-width: 95vw;
+  height: 85vh;
   /* box-shadow: 10px 0px 10px -10px rgb(0, 0, 0, 0.5); */
   overflow: auto;
+  transition: left 0.25s;
+}
+
+.containerClosed {
+  left: -305px;
+}
+
+.containerOpen {
+  left: 0px;
 }
 
 .menuSection {

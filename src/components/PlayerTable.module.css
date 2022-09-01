@@ -1,8 +1,9 @@
 .container {
   display: inline-block;
-  width: calc(100vw - 305px);
+  width: 99vw;
   height: 99vh;
   overflow: auto;
+  padding-left: 25px;
 }
 
 .tableHeader {
