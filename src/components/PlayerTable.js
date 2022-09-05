@@ -90,7 +90,7 @@ export default class PlayerTable extends React.Component {
                         player.overallRank +
                         "  -  " +
                         "Rd " +
-                        (parseInt(player.overallRank / numTeams) + 1)}
+                        (parseInt((player.overallRank - 1) / numTeams) + 1)}
                     </td>
                     <td className={style.tableCell}>{player.name}</td>
                     <td className={style.tableCell}>{player.position}</td>

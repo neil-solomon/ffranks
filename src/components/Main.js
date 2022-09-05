@@ -660,31 +660,21 @@ export default class Main extends React.Component {
       a.points > b.points ? -1 : 1
     );
 
+    const numTeams = parseInt(document.getElementById("numTeams").value);
+    const numQb = parseInt(document.getElementById("numPlayers_QB").value);
+    const numRb = parseInt(document.getElementById("numPlayers_RB").value);
+    const numWr = parseInt(document.getElementById("numPlayers_WR").value);
+    const numTe = parseInt(document.getElementById("numPlayers_TE").value);
+    const numDst = parseInt(document.getElementById("numPlayers_DST").value);
+    const numK = parseInt(document.getElementById("numPlayers_K").value);
+    const numFlex = parseInt(document.getElementById("numPlayers_FLEX").value);
     let benchPlayer = {
-      QB:
-        parseInt(document.getElementById("numTeams").value) *
-          parseInt(document.getElementById("numPlayers_QB").value) +
-        1,
-      RB:
-        parseInt(document.getElementById("numTeams").value) *
-          parseInt(document.getElementById("numPlayers_RB").value) +
-        1,
-      WR:
-        parseInt(document.getElementById("numTeams").value) *
-          parseInt(document.getElementById("numPlayers_WR").value) +
-        1,
-      TE:
-        parseInt(document.getElementById("numTeams").value) *
-          parseInt(document.getElementById("numPlayers_TE").value) +
-        1,
-      DST:
-        parseInt(document.getElementById("numTeams").value) *
-          parseInt(document.getElementById("numPlayers_DST").value) +
-        1,
-      K:
-        parseInt(document.getElementById("numTeams").value) *
-          parseInt(document.getElementById("numPlayers_K").value) +
-        1,
+      QB: numTeams * numQb + 1,
+      RB: numTeams * numRb + Math.round((numTeams * numFlex) / 3) + 1,
+      WR: numTeams * numWr + Math.round((numTeams * numFlex) / 2) + 1,
+      TE: numTeams * numTe + Math.round((numTeams * numFlex) / 6) + 1,
+      DST: numTeams * numDst + 1,
+      K: numTeams * numK + 1,
     };
     let benchPoints = { QB: 0, RB: 0, WR: 0, TE: 0, DST: 0, K: 0 };
     let benchCount = { QB: 0, RB: 0, WR: 0, TE: 0, DST: 0, K: 0 };
@@ -788,9 +778,9 @@ export default class Main extends React.Component {
   menuButton = () => {
     return (
       <div className={style.menuButton} key="menuButton">
-        <buttton onClick={this.toggleMenu} type="button">
+        <button onClick={this.toggleMenu} type="button">
           {this.state.menuOpen ? "Close" : "Menu"}
-        </buttton>
+        </button>
       </div>
     );
   };
